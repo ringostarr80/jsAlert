@@ -1,9 +1,15 @@
+const OVERLAY_BACKGROUND_ID = 'js-alert-overlay-background';
+const OVERLAY_ID = 'js-alert-overlay';
+const MESSAGE_ID = 'js-alert-message';
+const BUTTON_OK_ID = 'js-alert-ok';
+const BUTTON_CANCEL_ID = 'js-alert-cancel';
+
 const overlayColor = '#000';
 const overlayOpacity = 0.5;
 const repositionOnResize = true;
 const verticalOffset = -75;
 const horizontalOffset = 0;
-const theme = '_blue';
+const theme = 'blue';
 const draggable = true;
 let okButton = ' OK ';
 let cancelButton = ' Cancel ';
@@ -88,12 +94,12 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
     _overlay('show');
 
     const popupContainer = document.createElement('div');
-    popupContainer.id = 'popup_container';
+    popupContainer.id = OVERLAY_ID;
     const popupTitle = document.createElement('h1');
-    popupTitle.id = `popup_title${theme}`;
+    popupTitle.className = `js-alert-theme-${theme}`;
     popupContainer.appendChild(popupTitle);
     const popupContent = document.createElement('div');
-    popupContent.id = `popup_content${theme}`;
+    popupContent.className = 'js-alert-content';
     if (type === 'customPopup') {
         const popupBody = document.createElement('div');
         popupBody.id = 'popup_body';
@@ -101,8 +107,7 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
         popupContent.appendChild(popupBody);
     } else {
         const popupMessage = document.createElement('div');
-        popupMessage.id = 'popup_message';
-        popupMessage.className = 'text-justify';
+        popupMessage.id = MESSAGE_ID;
         popupContent.appendChild(popupMessage);
     }
     popupContainer.appendChild(popupContent);
@@ -112,16 +117,11 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
         popupContainer.classList.add(dialogClass);
     }
 
-    popupContainer.style.position = 'fixed';
-    popupContainer.style.zIndex = '99999';
-    popupContainer.style.padding = '0';
-    popupContainer.style.margin = '0';
-
     popupTitle.textContent = title;
     if (typeof type === 'string') {
         popupContent.classList.add(type);
     }
-    const popupMessage = document.getElementById('popup_message');
+    const popupMessage = document.getElementById(MESSAGE_ID);
     if (popupMessage instanceof HTMLElement) {
         popupMessage.textContent = msg.replace(/\n/g, '<br />');
     }
@@ -135,15 +135,15 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
     switch(type) {
         case 'alert':
             const popupPanelAlert = document.createElement('div');
-            popupPanelAlert.id = 'popup_panel';
+            popupPanelAlert.className = 'js-alert-panel';
             const okButtonAlert = document.createElement('input');
             okButtonAlert.type = 'button';
             okButtonAlert.className = 'btn btn-primary btn-flat btn-sm';
             okButtonAlert.value = okButton;
-            okButtonAlert.id = 'popup_ok';
+            okButtonAlert.id = BUTTON_OK_ID;
             popupPanelAlert.appendChild(okButtonAlert);
             const iconAlert = document.createElement('div');
-            iconAlert.className = 'icon_alert';
+            iconAlert.className = 'icon-alert';
             const infoCircle = document.createElement('i');
             infoCircle.className = 'fas fa-info-circle';
             iconAlert.appendChild(infoCircle);
@@ -176,22 +176,22 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
         
         case 'confirm':
             const popupPanelConfirm = document.createElement('div');
-            popupPanelConfirm.id = 'popup_panel';
+            popupPanelConfirm.className = 'js-alert-panel';
             const cancelButtonConfirm = document.createElement('input');
-            cancelButtonConfirm.id = 'popup_cancel';
+            cancelButtonConfirm.id = BUTTON_CANCEL_ID;
             cancelButtonConfirm.type = 'button';
             cancelButtonConfirm.value = cancelButton;
             cancelButtonConfirm.className = 'btn btn-default btn-flat btn-sm';
             popupPanelConfirm.appendChild(cancelButtonConfirm);
             popupPanelConfirm.appendChild(document.createTextNode(' '));
             const okButtonConfirm = document.createElement('input');
-            okButtonConfirm.id = 'popup_ok';
+            okButtonConfirm.id = BUTTON_OK_ID;
             okButtonConfirm.type = 'button';
             okButtonConfirm.value = okButton;
             okButtonConfirm.className = 'btn btn-primary btn-flat btn-sm';
             popupPanelConfirm.appendChild(okButtonConfirm);
             const iconAlertConfirm = document.createElement('div');
-            iconAlertConfirm.className = 'icon_alert';
+            iconAlertConfirm.className = 'icon-alert';
             const questionCircle = document.createElement('i');
             questionCircle.className = 'fas fa-question-circle';
             iconAlertConfirm.appendChild(questionCircle);
@@ -237,20 +237,20 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
         
         case 'prompt':
             /*
-            $("#popup_message").append('<br /><input type="text" id="popup_prompt" class="form-control input-sm"/><div class="icon_alert"><i class="fas fa-info-circle"></i></div>').after('<div id="popup_panel"><input class="btn btn-default btn-flat btn-sm" type="button" value="' + $.alerts.cancelButton + '" id="popup_cancel" /> <input type="button" value="' + $.alerts.okButton + '" id="popup_ok" class="btn btn-primary btn-flat btn-sm"/></div>');
-            //$("#popup_prompt").width( $("#popup_message").width() ); disable width popup_prompt
-            $("#popup_ok").click( function() {
+            $("#" + MESSAGE_ID).append('<br /><input type="text" id="popup_prompt" class="form-control input-sm"/><div class="icon-alert"><i class="fas fa-info-circle"></i></div>').after('<div class="js-alert-panel"><input class="btn btn-default btn-flat btn-sm" type="button" value="' + $.alerts.cancelButton + '" id="' + BUTTON_CANCEL_ID + '" /> <input type="button" value="' + $.alerts.okButton + '" id="' + BUTTON_OK_ID + '" class="btn btn-primary btn-flat btn-sm"/></div>');
+            //$("#popup_prompt").width( $("#" + MESSAGE_ID).width() ); disable width popup_prompt
+            $("#" + BUTTON_OK_ID).click( function() {
                 var val = $("#popup_prompt").val();
                 $.alerts._hide();
                 if( callback ) callback( val );
             });
-            $("#popup_cancel").click( function() {
+            $("#" + BUTTON_CANCEL_ID).click( function() {
                 $.alerts._hide();
                 if( callback ) callback( null );
             });
-            $("#popup_prompt, #popup_ok, #popup_cancel").keypress( function(e) {
-                if( e.keyCode == 13 ) $("#popup_ok").trigger('click');
-                if( e.keyCode == 27 ) $("#popup_cancel").trigger('click');
+            $("#popup_prompt, #" + BUTTON_OK_ID + ", #" + BUTTON_CANCEL_ID).keypress( function(e) {
+                if( e.keyCode == 13 ) $("#" + BUTTON_OK_ID).trigger('click');
+                if( e.keyCode == 27 ) $("#" + BUTTON_CANCEL_ID).trigger('click');
             });
             if( value ) $("#popup_prompt").val(value);
             $("#popup_prompt").focus().select();
@@ -259,7 +259,7 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
 
         case "customPopup":
             /*
-            $("#popup_body").after('<div id="popup_panel"><input type="button" value="' + $.alerts.cancelButton + '" id="popup_cancel" class="btn btn-default btn-flat btn-sm"/> <input type="button" value="' + $.alerts.okButton + '" id="popup_ok" class="btn btn-primary btn-flat btn-sm"/></div><div class="close button-close"><i class="fas fa-times-circle"><div>');
+            $("#popup_body").after('<div class="js-alert-panel"><input type="button" value="' + $.alerts.cancelButton + '" id="' + BUTTON_CANCEL_ID + '" class="btn btn-default btn-flat btn-sm"/> <input type="button" value="' + $.alerts.okButton + '" id="' + BUTTON_OK_ID + '" class="btn btn-primary btn-flat btn-sm"/></div><div class="close button-close"><i class="fas fa-times-circle"><div>');
             //validate form
             var frm = $("#popup_body").find("form");
             $.alerts._validateForm();
@@ -270,7 +270,7 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
                 if( callback ) callback(false);
             });
 
-            $("#popup_ok").click(function(e){
+            $("#" + BUTTON_OK_ID).click(function(e){
                 e.preventDefault();
                 if(frm.valid()===true){
                     //if form valid
@@ -279,14 +279,14 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
                 }
             });
 
-            $("#popup_cancel").click( function() {
+            $("#" + BUTTON_CACNEL_ID).click( function() {
                 $.alerts._hide();
                 if( callback ) callback(false);
             });
-            $("#popup_ok").focus();
-            $("#popup_ok, #popup_cancel").keypress( function(e) {
-                if( e.keyCode == 13 ) $("#popup_ok").trigger('click');
-                if( e.keyCode == 27 ) $("#popup_cancel").trigger('click');
+            $("#" + BUTTON_OK_ID).focus();
+            $("#" + BUTTON_OK_ID + ", #" + BUTTON_CANCEL_ID).keypress( function(e) {
+                if( e.keyCode == 13 ) $("#" + BUTTON_OK_ID).trigger('click');
+                if( e.keyCode == 27 ) $("#" + BUTTON_CANCEL_ID).trigger('click');
             });
             */
             break;
@@ -299,7 +299,7 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
 }
 
 function _hide() {
-    const popupContainer = document.getElementById('popup_container');
+    const popupContainer = document.getElementById(OVERLAY_ID);
     if (popupContainer instanceof HTMLElement) {
         popupContainer.parentElement?.removeChild(popupContainer);
     }
@@ -327,20 +327,13 @@ function _overlay(status: string) {
             _overlay('hide');
 
             const newPopupOverlay = document.createElement('div');
-            newPopupOverlay.id = 'popup_overlay';
-            newPopupOverlay.style.position = 'absolute';
-            newPopupOverlay.style.zIndex = '99998';
-            newPopupOverlay.style.top = '0px';
-            newPopupOverlay.style.left = '0px';
-            newPopupOverlay.style.width = '100%';
+            newPopupOverlay.id = OVERLAY_BACKGROUND_ID;
             newPopupOverlay.style.height = `${document.documentElement.clientHeight}px`;
-            newPopupOverlay.style.background = overlayColor;
-            newPopupOverlay.style.opacity = overlayOpacity.toString();
             document.body.appendChild(newPopupOverlay);
             break;
 
         case 'hide':
-            const popupOverlay = document.getElementById('popup_overlay');
+            const popupOverlay = document.getElementById(OVERLAY_BACKGROUND_ID);
             if (popupOverlay instanceof HTMLElement) {
                 popupOverlay.parentElement?.removeChild(popupOverlay);
             }
@@ -349,7 +342,7 @@ function _overlay(status: string) {
 }
 
 function _reposition() {
-    const popupContainer = document.getElementById('popup_container');
+    const popupContainer = document.getElementById(OVERLAY_ID);
     if (popupContainer instanceof HTMLElement) {
         let top = ((window.innerHeight / 2) - (popupContainer.offsetHeight / 2)) + verticalOffset;
         let left = ((window.innerWidth / 2) - (popupContainer.offsetWidth / 2)) + horizontalOffset;
@@ -362,9 +355,9 @@ function _reposition() {
 
         popupContainer.style.top = `${top}px`;
         popupContainer.style.left = `${left}px`;
-        const popupOverlay = document.getElementById('popup_overlay');
+        const popupOverlay = document.getElementById(OVERLAY_BACKGROUND_ID);
         if (popupOverlay instanceof HTMLElement) {
-            popupOverlay.style.height = `${(document.documentElement.clientHeight + 1)}px`;
+            popupOverlay.style.height = `${document.documentElement.clientHeight + 1}px`;
         }
     }
 }
