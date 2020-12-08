@@ -1,4 +1,3 @@
-"use strict";
 var OVERLAY_BACKGROUND_ID = 'js-alert-overlay-background';
 var OVERLAY_ID = 'js-alert-overlay';
 var MESSAGE_ID = 'js-alert-message';
@@ -408,4 +407,5 @@ function _validateForm() {
   });
 }
 */
+export { jsAlert, jsConfirm };
 //# sourceMappingURL=jsAlerts.js.map

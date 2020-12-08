@@ -433,3 +433,5 @@ function _validateForm() {
   });
 }
 */
+
+export { jsAlert, jsConfirm };
