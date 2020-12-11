@@ -1,3 +1,2 @@
-declare function showAlert(): void;
-declare function showConfirm(): void;
+export {};
 //# sourceMappingURL=demo.d.ts.map

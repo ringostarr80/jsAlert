@@ -15,7 +15,7 @@ let okButton = ' OK ';
 let cancelButton = ' Cancel ';
 let dialogClass: string|null = null;
 
-function jsAlert(message: string, title?: string, callback?: (result: Boolean) => void) {
+export function jsAlert(message: string, title?: string, callback?: (result: Boolean) => void) {
     if (!title) {
         title = 'Alert';
     }
@@ -26,7 +26,7 @@ function jsAlert(message: string, title?: string, callback?: (result: Boolean) =
     });
 }
 
-function jsConfirm(message: string, title: string, callback?: (result: Boolean) => void) {
+export function jsConfirm(message: string, title: string, callback?: (result: Boolean) => void) {
     if (!title) {
         title = 'Confirm';
     }
@@ -58,12 +58,12 @@ function jsCustomConfirm(message: string, title: string, okButtonText?: string, 
     });
 }
 
-function jsPrompt(message: string, value: string, title: string, callback?: Function) {
+export function jsPrompt(message: string, value: string, title: string, callback?: (result: string|null) => void) {
     if (!title) {
         title = 'Prompt';
     }
-    _show(title, message, value, 'prompt', (result: Boolean) => {
-        if (callback) {
+    _show(title, message, value, 'prompt', (result: Boolean|string|null) => {
+        if (callback && (result === null || typeof result === 'string')) {
             callback(result);
         }
     });
@@ -236,25 +236,100 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
             break;
         
         case 'prompt':
-            /*
-            $("#" + MESSAGE_ID).append('<br /><input type="text" id="popup_prompt" class="form-control input-sm"/><div class="icon-alert"><i class="fas fa-info-circle"></i></div>').after('<div class="js-alert-panel"><input class="btn btn-default btn-flat btn-sm" type="button" value="' + $.alerts.cancelButton + '" id="' + BUTTON_CANCEL_ID + '" /> <input type="button" value="' + $.alerts.okButton + '" id="' + BUTTON_OK_ID + '" class="btn btn-primary btn-flat btn-sm"/></div>');
-            //$("#popup_prompt").width( $("#" + MESSAGE_ID).width() ); disable width popup_prompt
-            $("#" + BUTTON_OK_ID).click( function() {
-                var val = $("#popup_prompt").val();
-                $.alerts._hide();
-                if( callback ) callback( val );
-            });
-            $("#" + BUTTON_CANCEL_ID).click( function() {
-                $.alerts._hide();
-                if( callback ) callback( null );
-            });
-            $("#popup_prompt, #" + BUTTON_OK_ID + ", #" + BUTTON_CANCEL_ID).keypress( function(e) {
-                if( e.keyCode == 13 ) $("#" + BUTTON_OK_ID).trigger('click');
-                if( e.keyCode == 27 ) $("#" + BUTTON_CANCEL_ID).trigger('click');
-            });
-            if( value ) $("#popup_prompt").val(value);
-            $("#popup_prompt").focus().select();
-            */
+			if (popupMessage instanceof HTMLElement) {
+				const brElement = document.createElement('br');
+				popupMessage.appendChild(brElement);
+
+				const promptInput = document.createElement('input');
+				promptInput.id = 'popup_prompt';
+				promptInput.type = 'text';
+				promptInput.className = 'form-control input-sm';
+				popupMessage.appendChild(promptInput);
+
+				const alertIconElement = document.createElement('div');
+				alertIconElement.className = 'icon-alert';
+				const infoCircle = document.createElement('i');
+				infoCircle.className = 'fas fa-info-circle';
+				alertIconElement.appendChild(infoCircle);
+				popupMessage.appendChild(alertIconElement);
+
+				const alertPanel = document.createElement('div');
+				alertPanel.className = 'js-alert-panel';
+
+				const cancelButtonElement = document.createElement('input');
+				cancelButtonElement.type = 'button';
+				cancelButtonElement.value = cancelButton;
+				cancelButtonElement.id = BUTTON_CANCEL_ID;
+				cancelButtonElement.className = 'btn btn-default btn-flat btn-sm';
+
+				const okButtonElement = document.createElement('input');
+				okButtonElement.type = 'button';
+				okButtonElement.value = okButton;
+				okButtonElement.id = BUTTON_OK_ID;
+				okButtonElement.className = 'btn btn-primary btn-flat btn-sm';
+
+				alertPanel.appendChild(cancelButtonElement);
+				alertPanel.appendChild(document.createTextNode(' '));
+				alertPanel.appendChild(okButtonElement);
+
+				if (popupMessage.nextSibling) {
+					popupMessage.parentNode?.insertBefore(alertPanel, popupMessage.nextSibling);
+				} else {
+					popupMessage.appendChild(alertPanel);
+				}
+			}
+
+			const popupPromptElement = document.getElementById('popup_prompt');
+			
+			const okButtonElement = document.getElementById(BUTTON_OK_ID);
+			if (okButtonElement instanceof HTMLElement) {
+				okButtonElement.addEventListener('click', () => {
+					const popupPromptElement = document.getElementById('popup_prompt');
+					if (popupPromptElement instanceof HTMLInputElement || popupPromptElement instanceof HTMLTextAreaElement) {
+						_hide();
+						if (callback) {
+							callback(popupPromptElement.value);
+						}
+					}
+				});
+			}
+			const cancelButtonElement = document.getElementById(BUTTON_CANCEL_ID);
+			if (cancelButtonElement instanceof HTMLElement) {
+				cancelButtonElement.addEventListener('click', () => {
+					_hide();
+					if (callback) {
+						callback(null);
+					}
+				});
+			}
+
+			const ids = ['popup_prompt', BUTTON_OK_ID, BUTTON_CANCEL_ID];
+			for(const id of ids) {
+				const idElement = document.getElementById(id);
+				if (idElement instanceof HTMLElement) {
+					idElement.addEventListener('keypress', e => {
+						if (e.code === 'Enter') {
+							const okButtonElement = document.getElementById(BUTTON_OK_ID);
+							if (okButtonElement instanceof HTMLElement) {
+								okButtonElement.dispatchEvent(new Event('click'));
+							}
+						}
+                		if (e.code === 'Escape') {
+							const cancelButtonElement = document.getElementById(BUTTON_CANCEL_ID);
+							if (cancelButtonElement instanceof HTMLElement) {
+								cancelButtonElement.dispatchEvent(new Event('click'));
+							}
+						}
+					});
+				}
+			}
+			if (popupPromptElement instanceof HTMLInputElement) {
+				if (value) {
+					popupPromptElement.value = value;
+				}
+				popupPromptElement.focus();
+				popupPromptElement.dispatchEvent(new Event('select'));
+			}
             break;
 
         case "customPopup":
@@ -293,7 +368,7 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
     }
 
     if (draggable) {
-        _draggable(popupContainer);
+		_draggable(popupContainer);
         popupTitle.style.cursor = 'move';
     }
 }
@@ -363,13 +438,11 @@ function _reposition() {
 }
 
 function _draggable(elem: HTMLElement) {
-    const handle = document.getElementById(`popup_title${theme}`);
+    const handle = elem.querySelector('h1');
 
     handle?.addEventListener('mousedown', ev => {
-        const randomNumber = Math.random().toString().replace('.', '');
-        const ns = `draggable_${randomNumber}`;
-        const mm = `mousemove.${ns}`;
-        const mu = `mouseup.${ns}`;
+		const randomNumber = Math.random().toString().replace('.', '');
+        const ns = `draggable-${randomNumber}`;
         const isFixed = (elem.style.position === 'fixed');
         let adjX = 0;
         let adjY = 0;
@@ -386,7 +459,7 @@ function _draggable(elem: HTMLElement) {
         elem.setAttribute(`data-${ns}`, JSON.stringify({ x : ox, y: oy }));
 
         const mmCallback = (evt: Event) => {
-            evt.preventDefault();
+			evt.preventDefault();
             evt.stopPropagation();
             if (isFixed) {
                 adjX = window.scrollX;
@@ -400,15 +473,17 @@ function _draggable(elem: HTMLElement) {
                     elem.style.left = `${evt.pageX - adjX - offset.x}px`;
                     elem.style.top = `${evt.pageY - adjY - offset.y}px`;
                 }
-            }
+			}
+			window.getSelection()?.removeAllRanges();
         };
-        window.addEventListener(mm, mmCallback);
+        window.addEventListener('mousemove', mmCallback);
         const muCallback = () => {
-            window.removeEventListener(mm, mmCallback);
-            window.removeEventListener(mu, muCallback);
-            elem.removeAttribute(`data-${ns}`);
+            window.removeEventListener('mousemove', mmCallback);
+            window.removeEventListener('mouseup', muCallback);
+			elem.removeAttribute(`data-${ns}`);
+			window.getSelection()?.removeAllRanges();
         };
-        window.addEventListener(mu, muCallback);
+        window.addEventListener('mouseup', muCallback);
     });
 }
 
@@ -433,5 +508,3 @@ function _validateForm() {
   });
 }
 */
-
-export { jsAlert, jsConfirm };

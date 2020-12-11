@@ -13,7 +13,7 @@ var draggable = true;
 var okButton = ' OK ';
 var cancelButton = ' Cancel ';
 var dialogClass = null;
-function jsAlert(message, title, callback) {
+export function jsAlert(message, title, callback) {
     if (!title) {
         title = 'Alert';
     }
@@ -23,7 +23,7 @@ function jsAlert(message, title, callback) {
         }
     });
 }
-function jsConfirm(message, title, callback) {
+export function jsConfirm(message, title, callback) {
     if (!title) {
         title = 'Confirm';
     }
@@ -53,12 +53,12 @@ function jsCustomConfirm(message, title, okButtonText, cancelButtonText, callbac
         cancelButton = ' Cancel ';
     });
 }
-function jsPrompt(message, value, title, callback) {
+export function jsPrompt(message, value, title, callback) {
     if (!title) {
         title = 'Prompt';
     }
     _show(title, message, value, 'prompt', function (result) {
-        if (callback) {
+        if (callback && (result === null || typeof result === 'string')) {
             callback(result);
         }
     });
@@ -82,7 +82,7 @@ function jsCustomPopup(content, title, okButtonText, cancelButtonText, callback)
     });
 }
 function _show(title, msg, value, type, callback) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     _hide();
     _overlay('show');
     var popupContainer = document.createElement('div');
@@ -224,25 +224,92 @@ function _show(title, msg, value, type, callback) {
             cancelButtonConfirm_1.addEventListener('keypress', buttonCallback);
             break;
         case 'prompt':
-            /*
-            $("#" + MESSAGE_ID).append('<br /><input type="text" id="popup_prompt" class="form-control input-sm"/><div class="icon-alert"><i class="fas fa-info-circle"></i></div>').after('<div class="js-alert-panel"><input class="btn btn-default btn-flat btn-sm" type="button" value="' + $.alerts.cancelButton + '" id="' + BUTTON_CANCEL_ID + '" /> <input type="button" value="' + $.alerts.okButton + '" id="' + BUTTON_OK_ID + '" class="btn btn-primary btn-flat btn-sm"/></div>');
-            //$("#popup_prompt").width( $("#" + MESSAGE_ID).width() ); disable width popup_prompt
-            $("#" + BUTTON_OK_ID).click( function() {
-                var val = $("#popup_prompt").val();
-                $.alerts._hide();
-                if( callback ) callback( val );
-            });
-            $("#" + BUTTON_CANCEL_ID).click( function() {
-                $.alerts._hide();
-                if( callback ) callback( null );
-            });
-            $("#popup_prompt, #" + BUTTON_OK_ID + ", #" + BUTTON_CANCEL_ID).keypress( function(e) {
-                if( e.keyCode == 13 ) $("#" + BUTTON_OK_ID).trigger('click');
-                if( e.keyCode == 27 ) $("#" + BUTTON_CANCEL_ID).trigger('click');
-            });
-            if( value ) $("#popup_prompt").val(value);
-            $("#popup_prompt").focus().select();
-            */
+            if (popupMessage instanceof HTMLElement) {
+                var brElement = document.createElement('br');
+                popupMessage.appendChild(brElement);
+                var promptInput = document.createElement('input');
+                promptInput.id = 'popup_prompt';
+                promptInput.type = 'text';
+                promptInput.className = 'form-control input-sm';
+                popupMessage.appendChild(promptInput);
+                var alertIconElement = document.createElement('div');
+                alertIconElement.className = 'icon-alert';
+                var infoCircle_1 = document.createElement('i');
+                infoCircle_1.className = 'fas fa-info-circle';
+                alertIconElement.appendChild(infoCircle_1);
+                popupMessage.appendChild(alertIconElement);
+                var alertPanel = document.createElement('div');
+                alertPanel.className = 'js-alert-panel';
+                var cancelButtonElement_1 = document.createElement('input');
+                cancelButtonElement_1.type = 'button';
+                cancelButtonElement_1.value = cancelButton;
+                cancelButtonElement_1.id = BUTTON_CANCEL_ID;
+                cancelButtonElement_1.className = 'btn btn-default btn-flat btn-sm';
+                var okButtonElement_1 = document.createElement('input');
+                okButtonElement_1.type = 'button';
+                okButtonElement_1.value = okButton;
+                okButtonElement_1.id = BUTTON_OK_ID;
+                okButtonElement_1.className = 'btn btn-primary btn-flat btn-sm';
+                alertPanel.appendChild(cancelButtonElement_1);
+                alertPanel.appendChild(document.createTextNode(' '));
+                alertPanel.appendChild(okButtonElement_1);
+                if (popupMessage.nextSibling) {
+                    (_l = popupMessage.parentNode) === null || _l === void 0 ? void 0 : _l.insertBefore(alertPanel, popupMessage.nextSibling);
+                }
+                else {
+                    popupMessage.appendChild(alertPanel);
+                }
+            }
+            var popupPromptElement = document.getElementById('popup_prompt');
+            var okButtonElement = document.getElementById(BUTTON_OK_ID);
+            if (okButtonElement instanceof HTMLElement) {
+                okButtonElement.addEventListener('click', function () {
+                    var popupPromptElement = document.getElementById('popup_prompt');
+                    if (popupPromptElement instanceof HTMLInputElement || popupPromptElement instanceof HTMLTextAreaElement) {
+                        _hide();
+                        if (callback) {
+                            callback(popupPromptElement.value);
+                        }
+                    }
+                });
+            }
+            var cancelButtonElement = document.getElementById(BUTTON_CANCEL_ID);
+            if (cancelButtonElement instanceof HTMLElement) {
+                cancelButtonElement.addEventListener('click', function () {
+                    _hide();
+                    if (callback) {
+                        callback(null);
+                    }
+                });
+            }
+            var ids = ['popup_prompt', BUTTON_OK_ID, BUTTON_CANCEL_ID];
+            for (var _i = 0, ids_1 = ids; _i < ids_1.length; _i++) {
+                var id = ids_1[_i];
+                var idElement = document.getElementById(id);
+                if (idElement instanceof HTMLElement) {
+                    idElement.addEventListener('keypress', function (e) {
+                        if (e.code === 'Enter') {
+                            var okButtonElement_2 = document.getElementById(BUTTON_OK_ID);
+                            if (okButtonElement_2 instanceof HTMLElement) {
+                                okButtonElement_2.dispatchEvent(new Event('click'));
+                            }
+                        }
+                        if (e.code === 'Escape') {
+                            var cancelButtonElement_2 = document.getElementById(BUTTON_CANCEL_ID);
+                            if (cancelButtonElement_2 instanceof HTMLElement) {
+                                cancelButtonElement_2.dispatchEvent(new Event('click'));
+                            }
+                        }
+                    });
+                }
+            }
+            if (popupPromptElement instanceof HTMLInputElement) {
+                if (value) {
+                    popupPromptElement.value = value;
+                }
+                popupPromptElement.focus();
+                popupPromptElement.dispatchEvent(new Event('select'));
+            }
             break;
         case "customPopup":
             /*
@@ -342,12 +409,10 @@ function _reposition() {
     }
 }
 function _draggable(elem) {
-    var handle = document.getElementById("popup_title" + theme);
+    var handle = elem.querySelector('h1');
     handle === null || handle === void 0 ? void 0 : handle.addEventListener('mousedown', function (ev) {
         var randomNumber = Math.random().toString().replace('.', '');
-        var ns = "draggable_" + randomNumber;
-        var mm = "mousemove." + ns;
-        var mu = "mouseup." + ns;
+        var ns = "draggable-" + randomNumber;
         var isFixed = (elem.style.position === 'fixed');
         var adjX = 0;
         var adjY = 0;
@@ -362,6 +427,7 @@ function _draggable(elem) {
         var ox = (ev.pageX - pos.left), oy = (ev.pageY - pos.top);
         elem.setAttribute("data-" + ns, JSON.stringify({ x: ox, y: oy }));
         var mmCallback = function (evt) {
+            var _a;
             evt.preventDefault();
             evt.stopPropagation();
             if (isFixed) {
@@ -376,14 +442,17 @@ function _draggable(elem) {
                     elem.style.top = evt.pageY - adjY - offset.y + "px";
                 }
             }
+            (_a = window.getSelection()) === null || _a === void 0 ? void 0 : _a.removeAllRanges();
         };
-        window.addEventListener(mm, mmCallback);
+        window.addEventListener('mousemove', mmCallback);
         var muCallback = function () {
-            window.removeEventListener(mm, mmCallback);
-            window.removeEventListener(mu, muCallback);
+            var _a;
+            window.removeEventListener('mousemove', mmCallback);
+            window.removeEventListener('mouseup', muCallback);
             elem.removeAttribute("data-" + ns);
+            (_a = window.getSelection()) === null || _a === void 0 ? void 0 : _a.removeAllRanges();
         };
-        window.addEventListener(mu, muCallback);
+        window.addEventListener('mouseup', muCallback);
     });
 }
 /*
@@ -407,5 +476,4 @@ function _validateForm() {
   });
 }
 */
-export { jsAlert, jsConfirm };
 //# sourceMappingURL=jsAlerts.js.map
