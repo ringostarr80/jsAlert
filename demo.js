@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var showAlertButton = document.getElementById('show-alert');
     if (showAlertButton instanceof HTMLElement) {
         showAlertButton.addEventListener('click', function () {
-            jsAlert('Hello World', 'Alert Dialog', function (result) {
+            jsAlert('Hello World\n2. line', 'Alert Dialog', function (result) {
                 console.log(result);
             });
         });
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var showConfirmButton = document.getElementById('show-confirm');
     if (showConfirmButton instanceof HTMLElement) {
         showConfirmButton.addEventListener('click', function () {
-            jsConfirm('Hello World', 'Confirm Dialog', function (result) {
+            jsConfirm('Hello World\n2. line', 'Confirm Dialog', function (result) {
                 console.log(result);
             });
         });
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var showPromptButton = document.getElementById('show-prompt');
     if (showPromptButton instanceof HTMLElement) {
         showPromptButton.addEventListener('click', function () {
-            jsPrompt('Hello World', 'Prompt Value', 'Title', function (result) {
+            jsPrompt('Hello World\n2. line', 'Prompt Value', 'Title', function (result) {
                 console.log(result);
             });
         });

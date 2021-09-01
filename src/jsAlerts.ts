@@ -123,7 +123,7 @@ function _show(title: string, msg: string, value?: string, type?: string, callba
     }
     const popupMessage = document.getElementById(MESSAGE_ID);
     if (popupMessage instanceof HTMLElement) {
-        popupMessage.textContent = msg.replace(/\n/g, '<br />');
+        popupMessage.innerText = msg;
     }
 
     popupContainer.style.minWidth = (popupContainer.clientWidth + 1).toString() + 'px';

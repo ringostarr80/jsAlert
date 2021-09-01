@@ -114,7 +114,7 @@ function _show(title, msg, value, type, callback) {
     }
     var popupMessage = document.getElementById(MESSAGE_ID);
     if (popupMessage instanceof HTMLElement) {
-        popupMessage.textContent = msg.replace(/\n/g, '<br />');
+        popupMessage.innerText = msg;
     }
     popupContainer.style.minWidth = (popupContainer.clientWidth + 1).toString() + 'px';
     popupContainer.style.maxWidth = (popupContainer.clientWidth + 1).toString() + 'px';
