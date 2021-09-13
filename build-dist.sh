@@ -5,15 +5,15 @@ set -e
 rm -rf dist
 # tsc
 tsc --target ES2015 --module es2015 --outDir ./dist --rootDir ./src --strict --sourceMap --declaration --esModuleInterop
-mv dist/jsAlerts.js dist/jsAlerts.esm.js
-mv dist/jsAlerts.js.map dist/jsAlerts.esm.js.map
-mv dist/jsAlerts.d.ts dist/jsAlerts.esm.d.ts
-sed -i 's/sourceMappingURL=jsAlerts.js.map/sourceMappingURL=jsAlerts.esm.js.map/g' dist/jsAlerts.esm.js
-sed -i 's/"file":"jsAlerts.js"/"file":"jsAlerts.esm.js"/g' dist/jsAlerts.esm.js.map
+mv dist/jsAlert.js dist/jsAlert.esm.js
+mv dist/jsAlert.js.map dist/jsAlert.esm.js.map
+mv dist/jsAlert.d.ts dist/jsAlert.esm.d.ts
+sed -i 's/sourceMappingURL=jsAlert.js.map/sourceMappingURL=jsAlert.esm.js.map/g' dist/jsAlert.esm.js
+sed -i 's/"file":"jsAlert.js"/"file":"jsAlert.esm.js"/g' dist/jsAlert.esm.js.map
 tsc --target ES2015 --module none   --outDir ./dist --rootDir ./src --strict --sourceMap --declaration --esModuleInterop
-sed -i 's/"use strict";/"use strict";\nif (typeof window["exports"] === "undefined") {\n\twindow["exports"] = {};\n}/g' dist/jsAlerts.js
+sed -i 's/"use strict";/"use strict";\nif (typeof window["exports"] === "undefined") {\n\twindow["exports"] = {};\n}/g' dist/jsAlert.js
 
-cp src/jsAlerts.css dist
+cp src/jsAlert.css dist
 mkdir -p dist/Font-Awesome/css
 cp src/Font-Awesome/css/all.min.css dist/Font-Awesome/css
 mkdir -p dist/Font-Awesome/webfonts

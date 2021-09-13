@@ -1,9 +1,3 @@
-"use strict";
-if (typeof window["exports"] === "undefined") {
-	window["exports"] = {};
-}
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.jsPrompt = exports.jsConfirm = exports.jsAlert = void 0;
 const OVERLAY_BACKGROUND_ID = 'js-alert-overlay-background';
 const OVERLAY_ID = 'js-alert-overlay';
 const MESSAGE_ID = 'js-alert-message';
@@ -17,7 +11,7 @@ const draggable = true;
 let okButton = ' OK ';
 let cancelButton = ' Cancel ';
 let dialogClass = null;
-function jsAlert(message, title, callback) {
+export function jsAlert(message, title, callback) {
     if (!title) {
         title = 'Alert';
     }
@@ -27,8 +21,7 @@ function jsAlert(message, title, callback) {
         }
     });
 }
-exports.jsAlert = jsAlert;
-function jsConfirm(message, title, callback) {
+export function jsConfirm(message, title, callback) {
     if (!title) {
         title = 'Confirm';
     }
@@ -38,7 +31,6 @@ function jsConfirm(message, title, callback) {
         }
     });
 }
-exports.jsConfirm = jsConfirm;
 function jsCustomConfirm(message, title, okButtonText, cancelButtonText, callback) {
     if (!title) {
         title = 'Confirm';
@@ -59,7 +51,7 @@ function jsCustomConfirm(message, title, okButtonText, cancelButtonText, callbac
         cancelButton = ' Cancel ';
     });
 }
-function jsPrompt(message, value, title, callback, opts) {
+export function jsPrompt(message, value, title, callback, opts) {
     if (!title) {
         title = 'Prompt';
     }
@@ -69,7 +61,6 @@ function jsPrompt(message, value, title, callback, opts) {
         }
     }, opts);
 }
-exports.jsPrompt = jsPrompt;
 function jsCustomPopup(content, title, okButtonText, cancelButtonText, callback) {
     if (!title) {
         title = 'Custom Popup';
@@ -485,4 +476,4 @@ function _validateForm() {
   });
 }
 */
-//# sourceMappingURL=jsAlerts.js.map
+//# sourceMappingURL=jsAlert.esm.js.map

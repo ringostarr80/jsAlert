@@ -1,4 +1,4 @@
-import { jsAlert, jsConfirm, jsPrompt } from './dist/jsAlerts.esm.js';
+import { jsAlert, jsConfirm, jsPrompt } from './dist/jsAlert.esm.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     const showAlertButton = document.getElementById('show-alert');
