@@ -1,0 +1,134 @@
+#js-alert-overlay-background {
+	position: absolute;
+	z-index: 99998;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	background-color: black;
+	opacity: 0.5;
+}
+
+#js-alert-overlay {
+	position: fixed;
+	z-index: 99999;
+	padding: 0;
+	margin: 0;
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	min-width: 300px; /* Dialog will be no smaller than this */
+	max-width: 600px; /* Dialog will wrap after this width */
+	background: #FFF;
+	/*border: solid 5px #999;*/
+	box-shadow:0 2px 2px rgba(0, 0, 0, 0.2), 0 1px 5px rgba(0, 0, 0, 0.2), 0 0 0 5px rgba(255, 255, 255, 0.4);
+	color: #000;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+
+	/* from bootstrap */
+	font-weight: 400;
+	line-height: 1.5;
+	text-align: left;
+}
+
+/* For Blue Theme */
+#js-alert-overlay h1 {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 1.75em;
+	color: #f4efef;
+	text-shadow: 1px 1px 1px #989292;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6db3f2', endColorstr='#1e69de',GradientType=0 );
+	border-bottom: solid 1px #999;
+	cursor: default;
+	padding: 0em;
+	margin: 0em;
+	border-radius:5px 5px 0px 0px;
+	-moz-border-radius:5px 5px 0px 0px;
+	-webkit-border-radius:5px 5px 0px 0px;
+}
+
+#js-alert-overlay h1.js-alert-theme-blue {
+	background: #6db3f2;
+	background: -moz-linear-gradient(top,  #6db3f2 0%, #3690f0 79%, #1e69de 100%);
+	background: -webkit-linear-gradient(top,  #6db3f2 0%,#3690f0 79%,#1e69de 100%);
+	background: linear-gradient(to bottom,  #6db3f2 0%,#3690f0 79%,#1e69de 100%);
+}
+
+#js-alert-overlay .js-alert-content {
+	padding: 9px;
+	margin: 0em;
+}
+
+#js-alert-overlay .js-alert-content.alert {
+	position: relative;
+	border: 1px solid transparent;
+	border-radius: 0.25rem;
+}
+
+#js-alert-message {
+	padding-left: 48px;
+	color:#717171;
+	min-height: 35px;
+	text-align: justify;
+}
+
+#js-alert-overlay .js-alert-panel {
+	text-align: right;
+	margin: 9px 0px 0px;
+}
+
+#popup_prompt {
+	margin: .5em 0em;
+}
+
+/*BOOTSTRAP THEME*/
+#js-alert-cancel , #js-alert-ok {
+	min-width: 70px;
+}
+
+#js-alert-overlay .icon-alert {
+	font-size: 35px;
+	position: absolute;
+	left: 14px;
+	top: 27px;
+	color:#3c8dbc;
+}
+
+.button-close {
+	position: absolute;
+	right: 5px;
+	top: 4px;
+	font-size: 16px;
+	padding: 0px 0px 0px 1px;
+}
+
+button, input {
+	overflow: visible;
+	margin: 0;
+}
+
+.btn {
+	display: inline-block;
+	font-weight: 400;
+	text-align: center;
+	vertical-align: middle;
+	user-select: none;
+	border: 1px solid transparent;
+	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btn-primary {
+	color: white;
+	background-color: #007bff;
+	border-color: #007bff;
+}
+.btn-sm {
+	padding: 0.25rem 0.5rem;
+	font-size: 0.875rem;
+	line-height: 1.5;
+	border-radius: 0.2rem;
+}
+.btn:not(:disabled):not(.disabled) {
+	cursor: pointer;
+}

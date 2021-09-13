@@ -1,23 +1,21 @@
-var OVERLAY_BACKGROUND_ID = 'js-alert-overlay-background';
-var OVERLAY_ID = 'js-alert-overlay';
-var MESSAGE_ID = 'js-alert-message';
-var BUTTON_OK_ID = 'js-alert-ok';
-var BUTTON_CANCEL_ID = 'js-alert-cancel';
-var overlayColor = '#000';
-var overlayOpacity = 0.5;
-var repositionOnResize = true;
-var verticalOffset = -75;
-var horizontalOffset = 0;
-var theme = 'blue';
-var draggable = true;
-var okButton = ' OK ';
-var cancelButton = ' Cancel ';
-var dialogClass = null;
+const OVERLAY_BACKGROUND_ID = 'js-alert-overlay-background';
+const OVERLAY_ID = 'js-alert-overlay';
+const MESSAGE_ID = 'js-alert-message';
+const BUTTON_OK_ID = 'js-alert-ok';
+const BUTTON_CANCEL_ID = 'js-alert-cancel';
+const repositionOnResize = true;
+const verticalOffset = -75;
+const horizontalOffset = 0;
+const theme = 'blue';
+const draggable = true;
+let okButton = ' OK ';
+let cancelButton = ' Cancel ';
+let dialogClass = null;
 export function jsAlert(message, title, callback) {
     if (!title) {
         title = 'Alert';
     }
-    _show(title, message, undefined, 'alert', function (result) {
+    _show(title, message, undefined, 'alert', (result) => {
         if (callback) {
             callback(result);
         }
@@ -27,7 +25,7 @@ export function jsConfirm(message, title, callback) {
     if (!title) {
         title = 'Confirm';
     }
-    _show(title, message, undefined, 'confirm', function (result) {
+    _show(title, message, undefined, 'confirm', (result) => {
         if (callback) {
             callback(result);
         }
@@ -38,12 +36,12 @@ function jsCustomConfirm(message, title, okButtonText, cancelButtonText, callbac
         title = 'Confirm';
     }
     if (okButtonText) {
-        okButton = " " + okButtonText + " ";
+        okButton = ` ${okButtonText} `;
     }
     if (cancelButtonText) {
-        cancelButton = " " + cancelButtonText + " ";
+        cancelButton = ` ${cancelButtonText} `;
     }
-    _show(title, message, undefined, 'confirm', function (result) {
+    _show(title, message, undefined, 'confirm', (result) => {
         if (callback) {
             callback(result);
         }
@@ -53,27 +51,27 @@ function jsCustomConfirm(message, title, okButtonText, cancelButtonText, callbac
         cancelButton = ' Cancel ';
     });
 }
-export function jsPrompt(message, value, title, callback) {
+export function jsPrompt(message, value, title, callback, opts) {
     if (!title) {
         title = 'Prompt';
     }
-    _show(title, message, value, 'prompt', function (result) {
+    _show(title, message, value, 'prompt', (result) => {
         if (callback && (result === null || typeof result === 'string')) {
             callback(result);
         }
-    });
+    }, opts);
 }
 function jsCustomPopup(content, title, okButtonText, cancelButtonText, callback) {
     if (!title) {
         title = 'Custom Popup';
     }
     if (okButtonText) {
-        okButton = " " + okButtonText + " ";
+        okButton = ` ${okButtonText} `;
     }
     if (cancelButtonText) {
-        cancelButton = " " + cancelButton + " ";
+        cancelButton = ` ${cancelButton} `;
     }
-    _show(title, content, undefined, 'customPopup', function (result, data) {
+    _show(title, content, undefined, 'customPopup', (result, data) => {
         if (callback) {
             callback(result, data);
         }
@@ -81,27 +79,27 @@ function jsCustomPopup(content, title, okButtonText, cancelButtonText, callback)
         cancelButton = ' Cancel ';
     });
 }
-function _show(title, msg, value, type, callback) {
+function _show(title, msg, value, type, callback, opts) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     _hide();
     _overlay('show');
-    var popupContainer = document.createElement('div');
+    const popupContainer = document.createElement('div');
     popupContainer.id = OVERLAY_ID;
-    var popupTitle = document.createElement('h1');
-    popupTitle.className = "js-alert-theme-" + theme;
+    const popupTitle = document.createElement('h1');
+    popupTitle.className = `js-alert-theme-${theme}`;
     popupContainer.appendChild(popupTitle);
-    var popupContent = document.createElement('div');
+    const popupContent = document.createElement('div');
     popupContent.className = 'js-alert-content';
     if (type === 'customPopup') {
-        var popupBody = document.createElement('div');
+        const popupBody = document.createElement('div');
         popupBody.id = 'popup_body';
         popupBody.textContent = msg;
         popupContent.appendChild(popupBody);
     }
     else {
-        var popupMessage_1 = document.createElement('div');
-        popupMessage_1.id = MESSAGE_ID;
-        popupContent.appendChild(popupMessage_1);
+        const popupMessage = document.createElement('div');
+        popupMessage.id = MESSAGE_ID;
+        popupContent.appendChild(popupMessage);
     }
     popupContainer.appendChild(popupContent);
     document.body.appendChild(popupContainer);
@@ -112,7 +110,7 @@ function _show(title, msg, value, type, callback) {
     if (typeof type === 'string') {
         popupContent.classList.add(type);
     }
-    var popupMessage = document.getElementById(MESSAGE_ID);
+    const popupMessage = document.getElementById(MESSAGE_ID);
     if (popupMessage instanceof HTMLElement) {
         popupMessage.innerText = msg;
     }
@@ -122,17 +120,17 @@ function _show(title, msg, value, type, callback) {
     _maintainPosition(true);
     switch (type) {
         case 'alert':
-            var popupPanelAlert = document.createElement('div');
+            const popupPanelAlert = document.createElement('div');
             popupPanelAlert.className = 'js-alert-panel';
-            var okButtonAlert_1 = document.createElement('input');
-            okButtonAlert_1.type = 'button';
-            okButtonAlert_1.className = 'btn btn-primary btn-flat btn-sm';
-            okButtonAlert_1.value = okButton;
-            okButtonAlert_1.id = BUTTON_OK_ID;
-            popupPanelAlert.appendChild(okButtonAlert_1);
-            var iconAlert = document.createElement('div');
+            const okButtonAlert = document.createElement('input');
+            okButtonAlert.type = 'button';
+            okButtonAlert.className = 'btn btn-primary btn-flat btn-sm';
+            okButtonAlert.value = okButton;
+            okButtonAlert.id = BUTTON_OK_ID;
+            popupPanelAlert.appendChild(okButtonAlert);
+            const iconAlert = document.createElement('div');
             iconAlert.className = 'icon-alert';
-            var infoCircle = document.createElement('i');
+            const infoCircle = document.createElement('i');
             infoCircle.className = 'fas fa-info-circle';
             iconAlert.appendChild(infoCircle);
             if (popupMessage instanceof HTMLElement) {
@@ -150,38 +148,38 @@ function _show(title, msg, value, type, callback) {
                     (_e = popupMessage.parentElement) === null || _e === void 0 ? void 0 : _e.appendChild(iconAlert);
                 }
             }
-            okButtonAlert_1.addEventListener('click', function () {
+            okButtonAlert.addEventListener('click', () => {
                 _hide();
                 if (callback) {
                     callback(true);
                 }
             });
-            okButtonAlert_1.focus();
-            okButtonAlert_1.addEventListener('keypress', function (e) {
+            okButtonAlert.focus();
+            okButtonAlert.addEventListener('keypress', e => {
                 if (e.code === 'Enter' || e.code === 'Escape') {
-                    okButtonAlert_1.dispatchEvent(new Event('click'));
+                    okButtonAlert.dispatchEvent(new Event('click'));
                 }
             });
             break;
         case 'confirm':
-            var popupPanelConfirm = document.createElement('div');
+            const popupPanelConfirm = document.createElement('div');
             popupPanelConfirm.className = 'js-alert-panel';
-            var cancelButtonConfirm_1 = document.createElement('input');
-            cancelButtonConfirm_1.id = BUTTON_CANCEL_ID;
-            cancelButtonConfirm_1.type = 'button';
-            cancelButtonConfirm_1.value = cancelButton;
-            cancelButtonConfirm_1.className = 'btn btn-default btn-flat btn-sm';
-            popupPanelConfirm.appendChild(cancelButtonConfirm_1);
+            const cancelButtonConfirm = document.createElement('input');
+            cancelButtonConfirm.id = BUTTON_CANCEL_ID;
+            cancelButtonConfirm.type = 'button';
+            cancelButtonConfirm.value = cancelButton;
+            cancelButtonConfirm.className = 'btn btn-default btn-flat btn-sm';
+            popupPanelConfirm.appendChild(cancelButtonConfirm);
             popupPanelConfirm.appendChild(document.createTextNode(' '));
-            var okButtonConfirm_1 = document.createElement('input');
-            okButtonConfirm_1.id = BUTTON_OK_ID;
-            okButtonConfirm_1.type = 'button';
-            okButtonConfirm_1.value = okButton;
-            okButtonConfirm_1.className = 'btn btn-primary btn-flat btn-sm';
-            popupPanelConfirm.appendChild(okButtonConfirm_1);
-            var iconAlertConfirm = document.createElement('div');
+            const okButtonConfirm = document.createElement('input');
+            okButtonConfirm.id = BUTTON_OK_ID;
+            okButtonConfirm.type = 'button';
+            okButtonConfirm.value = okButton;
+            okButtonConfirm.className = 'btn btn-primary btn-flat btn-sm';
+            popupPanelConfirm.appendChild(okButtonConfirm);
+            const iconAlertConfirm = document.createElement('div');
             iconAlertConfirm.className = 'icon-alert';
-            var questionCircle = document.createElement('i');
+            const questionCircle = document.createElement('i');
             questionCircle.className = 'fas fa-question-circle';
             iconAlertConfirm.appendChild(questionCircle);
             if (popupMessage instanceof HTMLElement) {
@@ -199,60 +197,63 @@ function _show(title, msg, value, type, callback) {
                     (_k = popupMessage.parentElement) === null || _k === void 0 ? void 0 : _k.appendChild(iconAlertConfirm);
                 }
             }
-            okButtonConfirm_1.addEventListener('click', function () {
+            okButtonConfirm.addEventListener('click', () => {
                 _hide();
                 if (callback) {
                     callback(true);
                 }
             });
-            cancelButtonConfirm_1.addEventListener('click', function () {
+            cancelButtonConfirm.addEventListener('click', () => {
                 _hide();
                 if (callback) {
                     callback(false);
                 }
             });
-            okButtonConfirm_1.focus();
-            var buttonCallback = function (e) {
+            okButtonConfirm.focus();
+            const buttonCallback = (e) => {
                 if (e.code === 'Enter') {
-                    okButtonConfirm_1.dispatchEvent(new Event('click'));
+                    okButtonConfirm.dispatchEvent(new Event('click'));
                 }
                 if (e.code === 'Escape') {
-                    cancelButtonConfirm_1.dispatchEvent(new Event('click'));
+                    cancelButtonConfirm.dispatchEvent(new Event('click'));
                 }
             };
-            okButtonConfirm_1.addEventListener('keypress', buttonCallback);
-            cancelButtonConfirm_1.addEventListener('keypress', buttonCallback);
+            okButtonConfirm.addEventListener('keypress', buttonCallback);
+            cancelButtonConfirm.addEventListener('keypress', buttonCallback);
             break;
         case 'prompt':
             if (popupMessage instanceof HTMLElement) {
-                var brElement = document.createElement('br');
+                const brElement = document.createElement('br');
                 popupMessage.appendChild(brElement);
-                var promptInput = document.createElement('input');
+                const promptInput = document.createElement('input');
                 promptInput.id = 'popup_prompt';
                 promptInput.type = 'text';
                 promptInput.className = 'form-control input-sm';
+                if ((opts === null || opts === void 0 ? void 0 : opts.maxlength) && (opts === null || opts === void 0 ? void 0 : opts.maxlength) > 0) {
+                    promptInput.maxLength = opts === null || opts === void 0 ? void 0 : opts.maxlength;
+                }
                 popupMessage.appendChild(promptInput);
-                var alertIconElement = document.createElement('div');
+                const alertIconElement = document.createElement('div');
                 alertIconElement.className = 'icon-alert';
-                var infoCircle_1 = document.createElement('i');
-                infoCircle_1.className = 'fas fa-info-circle';
-                alertIconElement.appendChild(infoCircle_1);
+                const infoCircle = document.createElement('i');
+                infoCircle.className = 'fas fa-info-circle';
+                alertIconElement.appendChild(infoCircle);
                 popupMessage.appendChild(alertIconElement);
-                var alertPanel = document.createElement('div');
+                const alertPanel = document.createElement('div');
                 alertPanel.className = 'js-alert-panel';
-                var cancelButtonElement_1 = document.createElement('input');
-                cancelButtonElement_1.type = 'button';
-                cancelButtonElement_1.value = cancelButton;
-                cancelButtonElement_1.id = BUTTON_CANCEL_ID;
-                cancelButtonElement_1.className = 'btn btn-default btn-flat btn-sm';
-                var okButtonElement_1 = document.createElement('input');
-                okButtonElement_1.type = 'button';
-                okButtonElement_1.value = okButton;
-                okButtonElement_1.id = BUTTON_OK_ID;
-                okButtonElement_1.className = 'btn btn-primary btn-flat btn-sm';
-                alertPanel.appendChild(cancelButtonElement_1);
+                const cancelButtonElement = document.createElement('input');
+                cancelButtonElement.type = 'button';
+                cancelButtonElement.value = cancelButton;
+                cancelButtonElement.id = BUTTON_CANCEL_ID;
+                cancelButtonElement.className = 'btn btn-default btn-flat btn-sm';
+                const okButtonElement = document.createElement('input');
+                okButtonElement.type = 'button';
+                okButtonElement.value = okButton;
+                okButtonElement.id = BUTTON_OK_ID;
+                okButtonElement.className = 'btn btn-primary btn-flat btn-sm';
+                alertPanel.appendChild(cancelButtonElement);
                 alertPanel.appendChild(document.createTextNode(' '));
-                alertPanel.appendChild(okButtonElement_1);
+                alertPanel.appendChild(okButtonElement);
                 if (popupMessage.nextSibling) {
                     (_l = popupMessage.parentNode) === null || _l === void 0 ? void 0 : _l.insertBefore(alertPanel, popupMessage.nextSibling);
                 }
@@ -260,11 +261,11 @@ function _show(title, msg, value, type, callback) {
                     popupMessage.appendChild(alertPanel);
                 }
             }
-            var popupPromptElement = document.getElementById('popup_prompt');
-            var okButtonElement = document.getElementById(BUTTON_OK_ID);
+            const popupPromptElement = document.getElementById('popup_prompt');
+            const okButtonElement = document.getElementById(BUTTON_OK_ID);
             if (okButtonElement instanceof HTMLElement) {
-                okButtonElement.addEventListener('click', function () {
-                    var popupPromptElement = document.getElementById('popup_prompt');
+                okButtonElement.addEventListener('click', () => {
+                    const popupPromptElement = document.getElementById('popup_prompt');
                     if (popupPromptElement instanceof HTMLInputElement || popupPromptElement instanceof HTMLTextAreaElement) {
                         _hide();
                         if (callback) {
@@ -273,31 +274,30 @@ function _show(title, msg, value, type, callback) {
                     }
                 });
             }
-            var cancelButtonElement = document.getElementById(BUTTON_CANCEL_ID);
+            const cancelButtonElement = document.getElementById(BUTTON_CANCEL_ID);
             if (cancelButtonElement instanceof HTMLElement) {
-                cancelButtonElement.addEventListener('click', function () {
+                cancelButtonElement.addEventListener('click', () => {
                     _hide();
                     if (callback) {
                         callback(null);
                     }
                 });
             }
-            var ids = ['popup_prompt', BUTTON_OK_ID, BUTTON_CANCEL_ID];
-            for (var _i = 0, ids_1 = ids; _i < ids_1.length; _i++) {
-                var id = ids_1[_i];
-                var idElement = document.getElementById(id);
+            const ids = ['popup_prompt', BUTTON_OK_ID, BUTTON_CANCEL_ID];
+            for (const id of ids) {
+                const idElement = document.getElementById(id);
                 if (idElement instanceof HTMLElement) {
-                    idElement.addEventListener('keypress', function (e) {
+                    idElement.addEventListener('keypress', e => {
                         if (e.code === 'Enter') {
-                            var okButtonElement_2 = document.getElementById(BUTTON_OK_ID);
-                            if (okButtonElement_2 instanceof HTMLElement) {
-                                okButtonElement_2.dispatchEvent(new Event('click'));
+                            const okButtonElement = document.getElementById(BUTTON_OK_ID);
+                            if (okButtonElement instanceof HTMLElement) {
+                                okButtonElement.dispatchEvent(new Event('click'));
                             }
                         }
                         if (e.code === 'Escape') {
-                            var cancelButtonElement_2 = document.getElementById(BUTTON_CANCEL_ID);
-                            if (cancelButtonElement_2 instanceof HTMLElement) {
-                                cancelButtonElement_2.dispatchEvent(new Event('click'));
+                            const cancelButtonElement = document.getElementById(BUTTON_CANCEL_ID);
+                            if (cancelButtonElement instanceof HTMLElement) {
+                                cancelButtonElement.dispatchEvent(new Event('click'));
                             }
                         }
                     });
@@ -352,7 +352,7 @@ function _show(title, msg, value, type, callback) {
 }
 function _hide() {
     var _a;
-    var popupContainer = document.getElementById(OVERLAY_ID);
+    const popupContainer = document.getElementById(OVERLAY_ID);
     if (popupContainer instanceof HTMLElement) {
         (_a = popupContainer.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(popupContainer);
     }
@@ -376,13 +376,13 @@ function _overlay(status) {
     switch (status) {
         case 'show':
             _overlay('hide');
-            var newPopupOverlay = document.createElement('div');
+            const newPopupOverlay = document.createElement('div');
             newPopupOverlay.id = OVERLAY_BACKGROUND_ID;
-            newPopupOverlay.style.height = document.documentElement.clientHeight + "px";
+            newPopupOverlay.style.height = `${document.documentElement.clientHeight}px`;
             document.body.appendChild(newPopupOverlay);
             break;
         case 'hide':
-            var popupOverlay = document.getElementById(OVERLAY_BACKGROUND_ID);
+            const popupOverlay = document.getElementById(OVERLAY_BACKGROUND_ID);
             if (popupOverlay instanceof HTMLElement) {
                 (_a = popupOverlay.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(popupOverlay);
             }
@@ -390,33 +390,33 @@ function _overlay(status) {
     }
 }
 function _reposition() {
-    var popupContainer = document.getElementById(OVERLAY_ID);
+    const popupContainer = document.getElementById(OVERLAY_ID);
     if (popupContainer instanceof HTMLElement) {
-        var top_1 = ((window.innerHeight / 2) - (popupContainer.offsetHeight / 2)) + verticalOffset;
-        var left = ((window.innerWidth / 2) - (popupContainer.offsetWidth / 2)) + horizontalOffset;
-        if (top_1 < 0) {
-            top_1 = 0;
+        let top = ((window.innerHeight / 2) - (popupContainer.offsetHeight / 2)) + verticalOffset;
+        let left = ((window.innerWidth / 2) - (popupContainer.offsetWidth / 2)) + horizontalOffset;
+        if (top < 0) {
+            top = 0;
         }
         if (left < 0) {
             left = 0;
         }
-        popupContainer.style.top = top_1 + "px";
-        popupContainer.style.left = left + "px";
-        var popupOverlay = document.getElementById(OVERLAY_BACKGROUND_ID);
+        popupContainer.style.top = `${top}px`;
+        popupContainer.style.left = `${left}px`;
+        const popupOverlay = document.getElementById(OVERLAY_BACKGROUND_ID);
         if (popupOverlay instanceof HTMLElement) {
-            popupOverlay.style.height = document.documentElement.clientHeight + 1 + "px";
+            popupOverlay.style.height = `${document.documentElement.clientHeight + 1}px`;
         }
     }
 }
 function _draggable(elem) {
-    var handle = elem.querySelector('h1');
-    handle === null || handle === void 0 ? void 0 : handle.addEventListener('mousedown', function (ev) {
-        var randomNumber = Math.random().toString().replace('.', '');
-        var ns = "draggable-" + randomNumber;
-        var isFixed = (elem.style.position === 'fixed');
-        var adjX = 0;
-        var adjY = 0;
-        var pos = {
+    const handle = elem.querySelector('h1');
+    handle === null || handle === void 0 ? void 0 : handle.addEventListener('mousedown', ev => {
+        const randomNumber = Math.random().toString().replace('.', '');
+        const ns = `draggable-${randomNumber}`;
+        const isFixed = (elem.style.position === 'fixed');
+        let adjX = 0;
+        let adjY = 0;
+        const pos = {
             left: elem.offsetLeft,
             top: elem.offsetTop
         };
@@ -424,9 +424,9 @@ function _draggable(elem) {
             adjX = window.scrollX;
             adjY = window.scrollY;
         }
-        var ox = (ev.pageX - pos.left), oy = (ev.pageY - pos.top);
-        elem.setAttribute("data-" + ns, JSON.stringify({ x: ox, y: oy }));
-        var mmCallback = function (evt) {
+        const ox = (ev.pageX - pos.left), oy = (ev.pageY - pos.top);
+        elem.setAttribute(`data-${ns}`, JSON.stringify({ x: ox, y: oy }));
+        const mmCallback = (evt) => {
             var _a;
             evt.preventDefault();
             evt.stopPropagation();
@@ -434,22 +434,22 @@ function _draggable(elem) {
                 adjX = window.scrollX;
                 adjY = window.scrollY;
             }
-            var dataAttr = elem.getAttribute("data-" + ns);
+            const dataAttr = elem.getAttribute(`data-${ns}`);
             if (dataAttr) {
-                var offset = JSON.parse(dataAttr);
+                const offset = JSON.parse(dataAttr);
                 if (evt instanceof MouseEvent) {
-                    elem.style.left = evt.pageX - adjX - offset.x + "px";
-                    elem.style.top = evt.pageY - adjY - offset.y + "px";
+                    elem.style.left = `${evt.pageX - adjX - offset.x}px`;
+                    elem.style.top = `${evt.pageY - adjY - offset.y}px`;
                 }
             }
             (_a = window.getSelection()) === null || _a === void 0 ? void 0 : _a.removeAllRanges();
         };
         window.addEventListener('mousemove', mmCallback);
-        var muCallback = function () {
+        const muCallback = () => {
             var _a;
             window.removeEventListener('mousemove', mmCallback);
             window.removeEventListener('mouseup', muCallback);
-            elem.removeAttribute("data-" + ns);
+            elem.removeAttribute(`data-${ns}`);
             (_a = window.getSelection()) === null || _a === void 0 ? void 0 : _a.removeAllRanges();
         };
         window.addEventListener('mouseup', muCallback);
@@ -476,4 +476,4 @@ function _validateForm() {
   });
 }
 */
-//# sourceMappingURL=jsAlerts.js.map
+//# sourceMappingURL=jsAlerts.esm.js.map

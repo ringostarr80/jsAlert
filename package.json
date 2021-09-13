@@ -1,0 +1,25 @@
+{
+  "name": "jsalert",
+  "version": "1.0.0",
+  "description": "an alternative alert/confirm/prompt message-box",
+  "main": "demo.js",
+  "scripts": {
+    "build": "./build-dist.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ringostarr80/jsAlert.git"
+  },
+  "keywords": [
+    "javascript",
+    "js",
+    "alert"
+  ],
+  "author": "Ringo Leese",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/ringostarr80/jsAlert/issues"
+  },
+  "homepage": "https://github.com/ringostarr80/jsAlert#readme"
+}

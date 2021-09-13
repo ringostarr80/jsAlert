@@ -1,3 +1,5 @@
+import { jsAlert, jsConfirm, jsPrompt } from './dist/jsAlerts.esm.js';
+
 document.addEventListener('DOMContentLoaded', function () {
     const showAlertButton = document.getElementById('show-alert');
     if (showAlertButton instanceof HTMLElement) {
