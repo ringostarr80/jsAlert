@@ -355,40 +355,6 @@ function _show(
 				popupPromptElement.dispatchEvent(new Event('select'));
 			}
             break;
-
-        case "customPopup":
-            /*
-            $("#popup_body").after('<div class="js-alert-panel"><input type="button" value="' + $.alerts.cancelButton + '" id="' + BUTTON_CANCEL_ID + '" class="btn btn-default btn-flat btn-sm"/> <input type="button" value="' + $.alerts.okButton + '" id="' + BUTTON_OK_ID + '" class="btn btn-primary btn-flat btn-sm"/></div><div class="close button-close"><i class="fas fa-times-circle"><div>');
-            //validate form
-            var frm = $("#popup_body").find("form");
-            $.alerts._validateForm();
-            frm.validate();
-
-            $(".button-close").click(function(){
-                $.alerts._hide();
-                if( callback ) callback(false);
-            });
-
-            $("#" + BUTTON_OK_ID).click(function(e){
-                e.preventDefault();
-                if(frm.valid()===true){
-                    //if form valid
-                    if( callback ) callback(true,frm.serialize());
-                    $.alerts._hide();
-                }
-            });
-
-            $("#" + BUTTON_CACNEL_ID).click( function() {
-                $.alerts._hide();
-                if( callback ) callback(false);
-            });
-            $("#" + BUTTON_OK_ID).focus();
-            $("#" + BUTTON_OK_ID + ", #" + BUTTON_CANCEL_ID).keypress( function(e) {
-                if( e.keyCode == 13 ) $("#" + BUTTON_OK_ID).trigger('click');
-                if( e.keyCode == 27 ) $("#" + BUTTON_CANCEL_ID).trigger('click');
-            });
-            */
-            break;
     }
 
     if (draggable) {
@@ -510,25 +476,3 @@ function _draggable(elem: HTMLElement) {
         window.addEventListener('mouseup', muCallback);
     });
 }
-
-/*
-function _validateForm() {
-    $.validator.setDefaults({
-        highlight: function(element) {
-            $(element).closest('.form-group').addClass('has-error');
-        },
-        unhighlight: function(element) {
-            $(element).closest('.form-group').removeClass('has-error');
-        },
-        errorElement: 'span',
-        errorClass: 'help-block',
-        errorPlacement: function(error, element) {
-            if(element.parent('.input-group').length) {
-                error.insertAfter(element.parent());
-            } else {
-                error.insertAfter(element);
-            }
-        }
-  });
-}
-*/
