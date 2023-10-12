@@ -17,22 +17,22 @@ type ShowOptions = {
     maxlength?: number
 };
 
-export function jsAlert(message: string, title?: string, callback?: (result: Boolean) => void) {
+export function jsAlert(message: string, title?: string, callback?: (result: boolean) => void) {
     if (!title) {
         title = 'Alert';
     }
-    _show(title, message, undefined, 'alert', (result: Boolean) => {
+    _show(title, message, undefined, 'alert', (result: boolean) => {
         if (callback) {
             callback(result);
         }
     });
 }
 
-export function jsConfirm(message: string, title: string, callback?: (result: Boolean) => void) {
+export function jsConfirm(message: string, title: string, callback?: (result: boolean) => void) {
     if (!title) {
         title = 'Confirm';
     }
-    _show(title, message, undefined, 'confirm', (result: Boolean) => {
+    _show(title, message, undefined, 'confirm', (result: boolean) => {
         if (callback)  {
             callback(result);
         }
@@ -49,7 +49,7 @@ function jsCustomConfirm(message: string, title: string, okButtonText?: string, 
     if (cancelButtonText) {
         cancelButton = ` ${cancelButtonText} `;
     }
-    _show(title, message, undefined, 'confirm', (result: Boolean) => {
+    _show(title, message, undefined, 'confirm', (result: boolean) => {
         if (callback) {
             callback(result);
         }
@@ -75,7 +75,7 @@ export function jsPrompt(
         message,
         value,
         'prompt',
-        (result: Boolean|string|null) => {
+        (result: boolean|string|null) => {
             if (callback && (result === null || typeof result === 'string')) {
                 callback(result);
             }
@@ -94,7 +94,7 @@ function jsCustomPopup(content: string, title: string, okButtonText?: string, ca
     if (cancelButtonText) {
         cancelButton = ` ${cancelButton} `;
     }
-    _show(title, content, undefined, 'customPopup', (result: Boolean, data: string) => {
+    _show(title, content, undefined, 'customPopup', (result: boolean, data: string) => {
         if (callback) {
             callback(result, data);
         }
